@@ -8,7 +8,7 @@ const getCards = (req, res) => {
   readFile(cardsDataPath)
     .then((cards) => res.status(200).send(cards))
     .catch(() => {
-      res.status(500).send('An error has occured on the server');
+      res.status(500).send({ messaage: 'An error has occured on the server' });
     });
 };
 
