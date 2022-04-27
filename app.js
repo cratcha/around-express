@@ -2,8 +2,11 @@ const express = require('express');
 // listen to port 3000
 const { PORT = 3000 } = process.env;
 const routes = require('./routes');
+const mongoose = require('mongoose');
 
 const app = express();
+
+mongoose.connect('mongodb://localhost:27017/aroundb');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
