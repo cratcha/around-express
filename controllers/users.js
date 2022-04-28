@@ -1,17 +1,21 @@
 const path = require('path');
 
-const readFile = require('../helpers/index');
-
-const usersDataPath = path.join(__dirname, '../data/users.json');
+const User = require('../models/user');
 
 const getUsers = (req, res) => {
-  readFile(usersDataPath, res)
+  User.find({})
+    .orFail()
     .then((users) => res.status(200).send(users))
-    .catch(() => res.status(500).send({ message: 'An error has occurred on the server' }));
+    .catch(() =>
+      res.status(500).send({ message: 'An error has occurred on the server' })
+    );
 };
 
 const getUserbyId = (req, res) => {
-  readFile(usersDataPath, res)
+  const { userId } = req.params;
+
+  User.findById(userId)
+    .orFail()
     .then((users) => users.find((user) => user._id === req.params.id))
     .then((user) => {
       if (!user) {
@@ -20,7 +24,17 @@ const getUserbyId = (req, res) => {
       }
       res.status(200).send(user);
     })
-    .catch(() => res.status(500).send({ message: 'An error has occurred on the server' }));
+    .catch(() =>
+      res.status(500).send({ message: 'An error has occurred on the server' })
+    );
 };
 
-module.exports = { getUsers, getUserbyId };
+const createUser = (req, res) => {
+  const { name, about, avatar } = req.body;
+
+  User.create({ name, about, avatar })
+    .then((user) => res.send({ data: user }))
+    .catch((err) => res.status(500).send({ message: 'Error' }));
+};
+
+module.exports = { getUsers, getUserbyId, createUser };

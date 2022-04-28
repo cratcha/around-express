@@ -1,7 +1,5 @@
 const path = require('path');
 
-const readFile = require('../helpers/index');
-
 const cardsDataPath = path.join(__dirname, '../data/cards.json');
 
 const getCards = (req, res) => {
