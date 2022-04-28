@@ -1,4 +1,3 @@
-const path = require('path');
 const Card = require('../models/card');
 const {
   HTTP_SUCCESS_OK,
@@ -18,7 +17,7 @@ const getCards = (req, res) => {
     });
 };
 
-//POST
+// POST
 const createCard = (req, res) => {
   const { name, link } = req.body;
   const owner = req.user._id;
@@ -39,7 +38,7 @@ const createCard = (req, res) => {
     });
 };
 
-//DELETE
+// DELETE
 const deleteCard = (req, res) => {
   const { cardId } = req.params;
   Card.findByIdAndDelete(cardId)
@@ -69,7 +68,7 @@ const likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     cardId,
     { $addToSet: { likes: currentUser } },
-    { new: true }
+    { new: true },
   )
     .orFail()
     .then((card) => res.status(HTTP_SUCCESS_OK).send({ data: card }))
@@ -77,14 +76,14 @@ const likeCard = (req, res) => {
       if (err.name === 'DocumentNotFoundError') {
         res
           .status(HTTP_CLIENT_ERROR_NOT_FOUND)
-          .send({ message: ` Card not found` });
+          .send({ message: ' Card not found' });
       } else if (err.name === 'CastError') {
         res.status(HTTP_CLIENT_ERROR_BAD_REQUEST).send({
-          message: `Invalid Card ID passed for liking a card`,
+          message: 'Invalid Card ID passed for liking a card',
         });
       } else {
         res.status(HTTP_INTERNAL_SERVER_ERROR).send({
-          message: ` An error has occurred on the server`,
+          message: ' An error has occurred on the server',
         });
       }
     });
@@ -97,7 +96,7 @@ const dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     cardId,
     { $pull: { likes: currentUser } },
-    { new: true }
+    { new: true },
   )
     .orFail()
     .then((card) => res.status(HTTP_SUCCESS_OK).send({ data: card }))
@@ -105,17 +104,23 @@ const dislikeCard = (req, res) => {
       if (err.name === 'DocumentNotFoundError') {
         res
           .status(HTTP_CLIENT_ERROR_NOT_FOUND)
-          .send({ message: `Card not found` });
+          .send({ message: 'Card not found' });
       } else if (err.name === 'CastError') {
         res.status(HTTP_CLIENT_ERROR_BAD_REQUEST).send({
-          message: `Invalid Card ID passed for disliking a card`,
+          message: 'Invalid Card ID passed for disliking a card',
         });
       } else {
         res.status(HTTP_INTERNAL_SERVER_ERROR).send({
-          message: `An error has occurred on the server`,
+          message: 'An error has occurred on the server',
         });
       }
     });
 };
 
-module.exports = { getCards, createCard, deleteCard, likeCard, dislikeCard };
+module.exports = {
+  getCards,
+  createCard,
+  deleteCard,
+  likeCard,
+  dislikeCard,
+};
